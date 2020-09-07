@@ -1,0 +1,17 @@
+{
+    "name": "DeepCopyForUnity.Editor",
+    "references": [
+        "GUID:09c14c1ad0183f74982908f68e7269e7"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
