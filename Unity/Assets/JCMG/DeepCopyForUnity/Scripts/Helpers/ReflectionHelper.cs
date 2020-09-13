@@ -25,9 +25,11 @@ THE SOFTWARE.
 
 using System;
 using System.Reflection;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
+	[Preserve]
 	internal static class ReflectionHelper
 	{
 		public static bool IsEnum(this Type t)
@@ -83,6 +85,11 @@ namespace Force.DeepCloner.Helpers
 		public static MethodInfo GetMethod(this Type t, string methodName)
 		{
 			return t.GetMethod(methodName);
+		}
+
+		public static MethodInfo GetStaticMethod(this Type t, string methodName)
+		{
+			return t.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
 		}
 
 		public static MethodInfo GetPrivateStaticMethod(this Type t, string methodName)

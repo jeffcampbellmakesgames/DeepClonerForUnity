@@ -28,10 +28,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
-	internal static class ClonerToExprGenerator
+	[Preserve]
+	public static class ClonerToExprGenerator
 	{
 		internal static object GenerateClonerInternal(Type realType, bool isDeepClone)
 		{
@@ -101,9 +103,9 @@ namespace Force.DeepCloner.Helpers
 				if (isDeepClone && !DeepClonerSafeTypes.CanReturnSameObject(fieldInfo.FieldType))
 				{
 					var methodInfo = fieldInfo.FieldType.IsValueType()
-						? typeof(DeepClonerGenerator).GetPrivateStaticMethod("CloneStructInternal")
+						? typeof(DeepClonerGenerator).GetStaticMethod("CloneStructInternal")
 							.MakeGenericMethod(fieldInfo.FieldType)
-						: typeof(DeepClonerGenerator).GetPrivateStaticMethod("CloneClassInternal");
+						: typeof(DeepClonerGenerator).GetStaticMethod("CloneClassInternal");
 
 					var get = Expression.Field(fromLocal, fieldInfo);
 
@@ -118,8 +120,6 @@ namespace Force.DeepCloner.Helpers
 					// todo: think about optimization, but it rare case
 					if (fieldInfo.IsInitOnly)
 					{
-						// var setMethod = fieldInfo.GetType().GetMethod("SetValue", new[] { typeof(object), typeof(object) });
-						// expressionList.Add(Expression.Call(Expression.Constant(fieldInfo), setMethod, toLocal, call));
 						var setMethod = typeof(DeepClonerExprGenerator).GetPrivateStaticMethod("ForceSetField");
 						expressionList.Add(
 							Expression.Call(
@@ -188,7 +188,7 @@ namespace Force.DeepCloner.Helpers
 				if (!isDeep)
 				{
 					var callS = Expression.Call(
-						typeof(ClonerToExprGenerator).GetPrivateStaticMethod("ShallowClone1DimArraySafeInternal")
+						typeof(ClonerToExprGenerator).GetStaticMethod("ShallowClone1DimArraySafeInternal")
 							.MakeGenericMethod(elementType),
 						Expression.Convert(from, type),
 						Expression.Convert(to, type));
@@ -212,7 +212,7 @@ namespace Force.DeepCloner.Helpers
 						methodName = "Clone1DimArrayStructInternal";
 					}
 
-					var methodInfo = typeof(ClonerToExprGenerator).GetPrivateStaticMethod(methodName)
+					var methodInfo = typeof(ClonerToExprGenerator).GetStaticMethod(methodName)
 						.MakeGenericMethod(elementType);
 					var callS = Expression.Call(
 						methodInfo,
@@ -231,7 +231,7 @@ namespace Force.DeepCloner.Helpers
 
 			{
 				// multidim or not zero-based arrays
-				var methodInfo = typeof(ClonerToExprGenerator).GetPrivateStaticMethod(
+				var methodInfo = typeof(ClonerToExprGenerator).GetStaticMethod(
 					rank == 2 && type == elementType.MakeArrayType()
 						? "Clone2DimArrayInternal"
 						: "CloneAbstractArrayInternal");
@@ -252,7 +252,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// when we can't use code generation, we can use these methods
-		internal static T[] ShallowClone1DimArraySafeInternal<T>(T[] objFrom, T[] objTo)
+		public static T[] ShallowClone1DimArraySafeInternal<T>(T[] objFrom, T[] objTo)
 		{
 			var l = Math.Min(objFrom.Length, objTo.Length);
 			Array.Copy(objFrom, objTo, l);
@@ -260,7 +260,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// when we can't use code generation, we can use these methods
-		internal static T[] Clone1DimArraySafeInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
+		public static T[] Clone1DimArraySafeInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
 		{
 			var l = Math.Min(objFrom.Length, objTo.Length);
 			state.AddKnownRef(objFrom, objTo);
@@ -268,7 +268,7 @@ namespace Force.DeepCloner.Helpers
 			return objTo;
 		}
 
-		internal static T[] Clone1DimArrayStructInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
+		public static T[] Clone1DimArrayStructInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (objFrom == null || objTo == null)
@@ -287,7 +287,7 @@ namespace Force.DeepCloner.Helpers
 			return objTo;
 		}
 
-		internal static T[] Clone1DimArrayClassInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
+		public static T[] Clone1DimArrayClassInternal<T>(T[] objFrom, T[] objTo, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (objFrom == null || objTo == null)
@@ -305,7 +305,7 @@ namespace Force.DeepCloner.Helpers
 			return objTo;
 		}
 
-		internal static T[,] Clone2DimArrayInternal<T>(T[,] objFrom, T[,] objTo, DeepCloneState state, bool isDeep)
+		public static T[,] Clone2DimArrayInternal<T>(T[,] objFrom, T[,] objTo, DeepCloneState state, bool isDeep)
 		{
 			// not null from called method, but will check it anyway
 			if (objFrom == null || objTo == null)
@@ -363,7 +363,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// rare cases, very slow cloning. currently it's ok
-		internal static Array CloneAbstractArrayInternal(Array objFrom, Array objTo, DeepCloneState state, bool isDeep)
+		public static Array CloneAbstractArrayInternal(Array objFrom, Array objTo, DeepCloneState state, bool isDeep)
 		{
 			// not null from called method, but will check it anyway
 			if (objFrom == null || objTo == null)

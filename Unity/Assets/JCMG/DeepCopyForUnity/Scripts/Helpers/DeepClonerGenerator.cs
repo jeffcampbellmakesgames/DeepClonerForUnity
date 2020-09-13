@@ -25,10 +25,12 @@ THE SOFTWARE.
 
 using System;
 using System.Linq;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
-	internal static class DeepClonerGenerator
+	[Preserve]
+	public static class DeepClonerGenerator
 	{
 		public static T CloneObject<T>(T obj)
 		{
@@ -49,7 +51,7 @@ namespace Force.DeepCloner.Helpers
 			return (T)CloneClassRoot(obj);
 		}
 
-		private static object CloneClassRoot(object obj)
+		internal static object CloneClassRoot(object obj)
 		{
 			if (obj == null)
 			{
@@ -69,7 +71,7 @@ namespace Force.DeepCloner.Helpers
 			return cloner(obj, new DeepCloneState());
 		}
 
-		internal static object CloneClassInternal(object obj, DeepCloneState state)
+		public static object CloneClassInternal(object obj, DeepCloneState state)
 		{
 			if (obj == null)
 			{
@@ -80,7 +82,7 @@ namespace Force.DeepCloner.Helpers
 				obj.GetType(),
 				t => GenerateCloner(t, true));
 
-			// safe ojbect
+			// safe object
 			if (cloner == null)
 			{
 				return obj;
@@ -97,7 +99,7 @@ namespace Force.DeepCloner.Helpers
 			return newInstance;
 		}
 
-		private static T CloneStructInternal<T>(T obj, DeepCloneState state) // where T : struct
+		public static T CloneStructInternal<T>(T obj, DeepCloneState state) // where T : struct
 		{
 			// no loops, no nulls, no inheritance
 			var cloner = GetClonerForValueType<T>();
@@ -112,7 +114,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// when we can't use code generation, we can use these methods
-		internal static T[] Clone1DimArraySafeInternal<T>(T[] obj, DeepCloneState state)
+		public static T[] Clone1DimArraySafeInternal<T>(T[] obj, DeepCloneState state)
 		{
 			var l = obj.Length;
 			var outArray = new T[l];
@@ -121,7 +123,7 @@ namespace Force.DeepCloner.Helpers
 			return outArray;
 		}
 
-		internal static T[] Clone1DimArrayStructInternal<T>(T[] obj, DeepCloneState state)
+		public static T[] Clone1DimArrayStructInternal<T>(T[] obj, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (obj == null)
@@ -141,7 +143,7 @@ namespace Force.DeepCloner.Helpers
 			return outArray;
 		}
 
-		internal static T[] Clone1DimArrayClassInternal<T>(T[] obj, DeepCloneState state)
+		public static T[] Clone1DimArrayClassInternal<T>(T[] obj, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (obj == null)
@@ -161,7 +163,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// relatively frequent case. specially handled
-		internal static T[,] Clone2DimArrayInternal<T>(T[,] obj, DeepCloneState state)
+		public static T[,] Clone2DimArrayInternal<T>(T[,] obj, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (obj == null)
@@ -205,7 +207,7 @@ namespace Force.DeepCloner.Helpers
 		}
 
 		// rare cases, very slow cloning. currently it's ok
-		internal static Array CloneAbstractArrayInternal(Array obj, DeepCloneState state)
+		public static Array CloneAbstractArrayInternal(Array obj, DeepCloneState state)
 		{
 			// not null from called method, but will check it anyway
 			if (obj == null)
@@ -245,7 +247,7 @@ namespace Force.DeepCloner.Helpers
 			}
 		}
 
-		internal static Func<T, DeepCloneState, T> GetClonerForValueType<T>()
+		public static Func<T, DeepCloneState, T> GetClonerForValueType<T>()
 		{
 			return (Func<T, DeepCloneState, T>)DeepClonerCache.GetOrAddStructAsObject(typeof(T), t => GenerateCloner(t, false));
 		}

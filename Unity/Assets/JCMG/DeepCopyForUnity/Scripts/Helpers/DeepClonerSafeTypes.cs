@@ -29,12 +29,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.Remoting;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
 	/// <summary>
 	///     Safe types are types, which can be copied without real cloning. e.g. simple structs or strings (it is immutable)
 	/// </summary>
+	[Preserve]
 	internal static class DeepClonerSafeTypes
 	{
 		internal static readonly ConcurrentDictionary<Type, bool> KnownTypes = new ConcurrentDictionary<Type, bool>();

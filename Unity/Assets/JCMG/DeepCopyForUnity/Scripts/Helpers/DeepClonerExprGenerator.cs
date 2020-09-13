@@ -29,9 +29,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
+	[Preserve]
 	internal static class DeepClonerExprGenerator
 	{
 		private static readonly ConcurrentDictionary<FieldInfo, bool> _readonlyFields =
@@ -137,9 +139,9 @@ namespace Force.DeepCloner.Helpers
 				if (!DeepClonerSafeTypes.CanReturnSameObject(fieldInfo.FieldType))
 				{
 					var methodInfo = fieldInfo.FieldType.IsValueType()
-						? typeof(DeepClonerGenerator).GetPrivateStaticMethod("CloneStructInternal")
+						? typeof(DeepClonerGenerator).GetStaticMethod("CloneStructInternal")
 							.MakeGenericMethod(fieldInfo.FieldType)
-						: typeof(DeepClonerGenerator).GetPrivateStaticMethod("CloneClassInternal");
+						: typeof(DeepClonerGenerator).GetStaticMethod("CloneClassInternal");
 
 					var get = Expression.Field(fromLocal, fieldInfo);
 
@@ -155,8 +157,6 @@ namespace Force.DeepCloner.Helpers
 					var isReadonly = _readonlyFields.GetOrAdd(fieldInfo, f => f.IsInitOnly);
 					if (isReadonly)
 					{
-						// var setMethod = fieldInfo.GetType().GetMethod("SetValue", new[] { typeof(object), typeof(object) });
-						// expressionList.Add(Expression.Call(Expression.Constant(fieldInfo), setMethod, toLocal, call));
 						var setMethod = typeof(DeepClonerExprGenerator).GetPrivateStaticMethod("ForceSetField");
 						expressionList.Add(
 							Expression.Call(
@@ -205,12 +205,12 @@ namespace Force.DeepCloner.Helpers
 				if (rank == 2 && type == elementType.MakeArrayType())
 				{
 					// small optimization for 2 dim arrays
-					methodInfo = typeof(DeepClonerGenerator).GetPrivateStaticMethod("Clone2DimArrayInternal")
+					methodInfo = typeof(DeepClonerGenerator).GetStaticMethod("Clone2DimArrayInternal")
 						.MakeGenericMethod(elementType);
 				}
 				else
 				{
-					methodInfo = typeof(DeepClonerGenerator).GetPrivateStaticMethod("CloneAbstractArrayInternal");
+					methodInfo = typeof(DeepClonerGenerator).GetStaticMethod("CloneAbstractArrayInternal");
 				}
 			}
 			else
@@ -225,7 +225,7 @@ namespace Force.DeepCloner.Helpers
 					methodName = "Clone1DimArrayStructInternal";
 				}
 
-				methodInfo = typeof(DeepClonerGenerator).GetPrivateStaticMethod(methodName).MakeGenericMethod(elementType);
+				methodInfo = typeof(DeepClonerGenerator).GetStaticMethod(methodName).MakeGenericMethod(elementType);
 			}
 
 			var from = Expression.Parameter(typeof(object));

@@ -27,10 +27,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
-	internal class DeepCloneState
+	[Preserve]
+	public class DeepCloneState
 	{
 		private class CustomEqualityComparer : IEqualityComparer<object>,
 		                                       IEqualityComparer

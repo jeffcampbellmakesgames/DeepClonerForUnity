@@ -25,9 +25,11 @@ THE SOFTWARE.
 
 using System;
 using System.Collections.Concurrent;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
+	[Preserve]
 	internal static class DeepClonerCache
 	{
 		private static readonly ConcurrentDictionary<Type, object> _typeCache = new ConcurrentDictionary<Type, object>();

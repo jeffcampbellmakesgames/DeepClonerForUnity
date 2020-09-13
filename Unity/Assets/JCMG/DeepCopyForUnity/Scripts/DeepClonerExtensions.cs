@@ -25,13 +25,14 @@ THE SOFTWARE.
 
 using System;
 using System.Security;
-using Force.DeepCloner.Helpers;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner
+namespace JCMG.DeepCopyForUnity
 {
 	/// <summary>
 	///     Extensions for object cloning
 	/// </summary>
+	[Preserve]
 	public static class DeepClonerExtensions
 	{
 		static DeepClonerExtensions()
