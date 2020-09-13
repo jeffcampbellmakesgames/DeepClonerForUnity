@@ -1,6 +1,6 @@
-<a href="https://openupm.com/packages/com.jeffcampbellmakesgames.deepclonerforunity/"><img src="https://img.shields.io/npm/v/com.jeffcampbellmakesgames.deepclonerforunity?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
-<img alt="GitHub issues" src="https://img.shields.io/github/issues/jeffcampbellmakesgames/DeepClonerForUnity">
-<img alt="GitHub" src="https://img.shields.io/github/license/jeffcampbellmakesgames/DeepClonerForUnity">
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+## NOTE: This project is provided as-is as I have not been able to get all use-cases covered for AOT/il2cpp platforms (see [here](https://github.com/jeffcampbellmakesgames/Entitas-Redux/issues/18) for more details). I'd like to pursue this at some point again once either more support for dynamic code generation is available on these platforms (for Unity) or if I get inspired to pursue this again via a different avenue or set of contraints. If interested in helping, please reach out!
 
 # DeepCloner For Unity
 
@@ -18,39 +18,6 @@
 	</assembly>
 </linker>
 ```
-
-## Installing DeepClonerForUnity
-Using this library in your project can be done in three ways:
-
-### Install via OpenUPM
-The package is available on the [openupm registry](https://openupm.com/). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
-
-```
-openupm add com.jeffcampbellmakesgames.deepclonerforunity
-```
-
-### Install via GIT URL
-Using the native Unity Package Manager introduced in 2017.2, you can add this library as a package by modifying your `manifest.json` file found at `/ProjectName/Packages/manifest.json` to include it as a dependency. See the example below on how to reference it.
-
-```
-{
-	"dependencies": {
-		...
-		"com.jeffcampbellmakesgames.deepclonerforunity" : "https://github.com/jeffcampbellmakesgames/DeepClonerForUnity.git#release/stable",
-		...
-	}
-}
-```
-
-
-You will need to have Git installed and available in your system's PATH.
-
-### Install via classic `.UnityPackage`
-The latest release can be found [here](https://github.com/jeffcampbellmakesgames/DeepClonerForUnity/releases) as a UnityPackage file that can be downloaded and imported directly into your project's Assets folder.
-
-## Usage
-
-To learn more about how to use JCMG DeepClonerForUnity, see [here](./usage.md) for more information.
 
 ## Support
 If this is useful to you and/or you’d like to see future development and more tools in the future, please consider supporting it either by contributing to the Github projects (submitting bug reports or features and/or creating pull requests) or by buying me coffee using any of the links below. Every little bit helps!
