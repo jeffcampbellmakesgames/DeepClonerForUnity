@@ -1,0 +1,521 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NClone</name>
+    </assembly>
+    <members>
+        <member name="T:NClone.MemberAccess.ArrayAccessor">
+            <summary>
+            Implementation of <see cref="T:NClone.MemberAccess.IArrayAccessor"/>
+            </summary>
+        </member>
+        <member name="T:NClone.MemberAccess.IArrayAccessor">
+            <summary>
+            Represents access to an array of specific type.
+            </summary>
+        </member>
+        <member name="M:NClone.MemberAccess.IArrayAccessor.GetElement(System.Array,System.Int32)">
+            <summary>
+            Gets element from <paramref name="array"/> at specified <paramref name="index"/>.
+            </summary>
+        </member>
+        <member name="M:NClone.MemberAccess.IArrayAccessor.SetElement(System.Array,System.Int32,System.Object)">
+            <summary>
+            Sets element in <paramref name="array"/> at specified <paramref name="index"/> to <paramref name="value"/>.
+            </summary>
+        </member>
+        <member name="P:NClone.MemberAccess.IArrayAccessor.ElementType">
+            <summary>
+            Declared <see cref="T:System.Type"/> of elements in array that can be accessed.
+            </summary>
+        </member>
+        <member name="T:NClone.MemberAccess.ArrayAccessorBuilder">
+            <summary>
+            Factory for <see cref="T:NClone.MemberAccess.IArrayAccessor"/>s.
+            </summary>
+        </member>
+        <member name="M:NClone.MemberAccess.ArrayAccessorBuilder.BuildForArrayOf(System.Type)">
+            <summary>
+            Builds <see cref="T:NClone.MemberAccess.IArrayAccessor"/> for arrays with elements of type <paramref name="arrayElementType"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute">
+            <summary>
+            Attribute that can be used to specify concrete <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> for types and type members.
+            </summary>
+            <remarks>
+            <para>When applied to types, it will affect the per-type behavior (provided via <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetPerTypeBehavior(System.Type)"/>.
+            When applied to type members, it will affect per-member behavior (provided via <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetFieldsReplicationInfo(System.Type)"/>.</para>
+            
+            <para>When applied to auto-implemented properties or events actually affects their backing fields. When applied to normal properties
+            or events does not have any affect.</para>
+            </remarks>
+        </member>
+        <member name="M:NClone.MetadataProviders.CustomReplicationBehaviorAttribute.#ctor(NClone.MetadataProviders.ReplicationBehavior)">
+            <summary>
+            Constructor for <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.CustomReplicationBehaviorAttribute.GetReplicationBehavior">
+            <summary>
+            Returns <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> assigned to member via
+            current <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.MetadataProviders.ConventionalMetadataProvider">
+            <summary>
+            Implementation of <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> that uses conventions
+            and information from <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>s.
+            </summary>
+            <remarks>
+            <para>Used conventions are:
+            <list type="bullet">
+            <item>Structures are copied by-value during cloning.</item>
+            <item><see cref="T:System.Delegate"/>s are not copied during cloning.</item>
+            <item>Lazy <see cref="T:System.Collections.IEnumerable"/> inside cloning types causes exception.</item>
+            </list></para>
+            
+            <para>If you want to override conventional behavior for some type or member, apply
+            <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/> to it.</para>
+            </remarks>
+            <seealso cref="T:NClone.MetadataProviders.AttributeBasedMetadataProvider"/>
+            <seealso cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>
+        </member>
+        <member name="T:NClone.MetadataProviders.AttributeBasedMetadataProvider">
+            <summary>
+            Implementation of <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> that, in addition to <see cref="T:NClone.MetadataProviders.DefaultMetadataProvider"/> 
+            functionality, uses information from <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>s.
+            </summary>
+            <remarks>
+            <para>Method <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetPerTypeBehavior(System.Type)"/> consider type-level
+            <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>s, while method
+            <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetFieldsReplicationInfo(System.Type)"/> consider only member-level attributes.</para>
+            
+            <para>Note that <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/> has no effect on common properties and events,
+            it only affects auto-generated ones.</para>
+            </remarks>
+            <seealso cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>
+        </member>
+        <member name="T:NClone.MetadataProviders.DefaultMetadataProvider">
+            <summary>
+            Implementation of <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> that provides basic and always applicable functionality.
+            </summary>
+            <remarks>
+            <para><see cref="T:NClone.MetadataProviders.DefaultMetadataProvider"/> defines that:
+            <list type="number">
+            <item>Primitive types, enums and <c>string</c> use <see cref="F:NClone.MetadataProviders.ReplicationBehavior.Copy"/>.</item>
+            <item><see cref="T:System.Nullable`1"/> types inherit <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> from the underlying type.</item>
+            <item>For each <see cref="F:NClone.MetadataProviders.ReplicationBehavior.DeepCopy"/>-ied type all fields should be deep copied.</item>
+            </list>
+            </para>
+            </remarks>
+        </member>
+        <member name="T:NClone.MetadataProviders.IMetadataProvider">
+            <summary>
+            Provides information about <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> for types and type members.
+            </summary>
+            <remarks>
+            <para><see cref="T:NClone.MetadataProviders.IMetadataProvider"/> provides two levels of <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/>:
+            defined per-type (can be obtained via <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetPerTypeBehavior(System.Type)"/>), and defined per-member
+            (can be obtained via <see cref="M:NClone.MetadataProviders.IMetadataProvider.GetFieldsReplicationInfo(System.Type)"/>). Actual <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> for
+            specific replicating object is computed as a minimum of its per-type <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/>
+            and <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> for member, in which it is stored.</para>
+            
+            <para>Such approach gives additional flexibility for declaring type to adjust how its members are replicated.</para>
+            </remarks>
+        </member>
+        <member name="M:NClone.MetadataProviders.IMetadataProvider.GetPerTypeBehavior(System.Type)">
+            <summary>
+            Provides per-type <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> for given <paramref name="type"/>.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.IMetadataProvider.GetFieldsReplicationInfo(System.Type)">
+            <summary>
+            Get the list of <see cref="T:System.Reflection.FieldInfo"/>s in concrete type and per-member <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/>
+            defined for them.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.GetPerTypeBehavior(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.GetFieldsReplicationInfo(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.TryGetPerTypeBehavior(System.Type)">
+            <summary>
+            Extension point. Try to find per-type <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> or
+            return <c>null</c>, if current <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> does not specify it.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.TryGetPerMemberReplicationBehavior(NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription)">
+            <summary>
+            Extension point. Try to find per-member <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> or
+            return <c>null</c>, if current <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> does not specify it.
+            </summary>
+        </member>
+        <member name="T:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription">
+            <summary>
+            Description of one field in replicated type.
+            </summary>
+            <remarks>
+            The main need of this class is to bind compiler-generated fields to 
+            members that causes their generation.
+            </remarks>
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.#ctor(System.Reflection.FieldInfo)">
+            <summary>
+            Create <see cref="T:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription"/> for common field.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.#ctor(System.Reflection.PropertyInfo,System.Reflection.FieldInfo)">
+            <summary>
+            Create <see cref="T:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription"/> for property with backing field.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.#ctor(System.Reflection.EventInfo,System.Reflection.FieldInfo)">
+            <summary>
+            Create <see cref="T:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription"/> for event with backing field.
+            </summary>
+        </member>
+        <member name="P:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.BackingField">
+            <summary>
+            <see cref="T:System.Reflection.FieldInfo"/> of one field in replicated type.
+            </summary>
+        </member>
+        <member name="P:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.DeclaringMember">
+            <summary>
+            <see cref="T:System.Reflection.MemberInfo"/> of member that causes emitting <see cref="P:NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription.BackingField"/>
+            by compiler, e.g. event, auto-property, or field by itself.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.AttributeBasedMetadataProvider.TryGetPerTypeBehavior(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:NClone.MetadataProviders.AttributeBasedMetadataProvider.TryGetPerMemberReplicationBehavior(NClone.MetadataProviders.DefaultMetadataProvider.CopyableFieldDescription)">
+            <inheritdoc />
+        </member>
+        <member name="M:NClone.MetadataProviders.AttributeBasedMetadataProvider.TryGetBehaviorFromAttribute(System.Reflection.MemberInfo)">
+            <summary>
+            Returns <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> defined via <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>
+            on specific <paramref name="memberOrType"/> or <c>null</c> if no attribute is specified.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.ConventionalMetadataProvider.TryGetPerTypeBehavior(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="T:NClone.MetadataProviders.FieldReplicationInfo">
+            <summary>
+            Value-object for describing <see cref="T:System.Reflection.FieldInfo"/> that should be affected during replication
+            and per-member <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> assigned to it.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.FieldReplicationInfo.#ctor(System.Reflection.FieldInfo,NClone.MetadataProviders.ReplicationBehavior)">
+            <summary>
+            Constructor for <see cref="T:NClone.MetadataProviders.FieldReplicationInfo"/>
+            </summary>
+        </member>
+        <member name="P:NClone.MetadataProviders.FieldReplicationInfo.Field">
+            <summary>
+            Field that should be affected during replication.
+            </summary>
+        </member>
+        <member name="P:NClone.MetadataProviders.FieldReplicationInfo.Behavior">
+            <summary>
+            <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> that should be applied to <see cref="P:NClone.MetadataProviders.FieldReplicationInfo.Field"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.MetadataProviders.LazyTypeFoundException">
+            <summary>
+            Exception indicating that lazy type, e.g. lazily evaluated <see cref="T:System.Collections.Generic.IEnumerable`1"/>,
+            or <see cref="T:System.Linq.IQueryable`1"/>, or <see cref="T:System.Lazy`1"/>, found inside replicated type.
+            </summary>
+        </member>
+        <member name="M:NClone.MetadataProviders.LazyTypeFoundException.#ctor(System.Type)">
+            <summary>
+            Constructor for <see cref="T:NClone.MetadataProviders.LazyTypeFoundException"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.CloneArrayReplicationStrategy">
+            <summary>
+            Implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> that deep copying arrays.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.IReplicationStrategy">
+            <summary>
+            Strategy of replicating instances of a single type.
+            </summary>
+        </member>
+        <member name="M:NClone.ReplicationStrategies.IReplicationStrategy.Replicate(System.Object,NClone.ObjectReplication.IReplicationContext)">
+            <summary>
+            Apply current <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> to <paramref name="source"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.CopyArrayReplicationStrategy">
+            <summary>
+            Implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> for shallow copying arrays.
+            </summary>
+        </member>
+        <member name="F:NClone.ReplicationStrategies.CopyArrayReplicationStrategy.Instance">
+            <summary>
+            The single instance of <see cref="T:NClone.ReplicationStrategies.CopyArrayReplicationStrategy"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.MetadataProviders.ReplicationBehavior">
+            <summary>
+            Defines how <see cref="T:NClone.ObjectReplication.ObjectReplicator"/> should treat specific types/members.
+            </summary>
+        </member>
+        <member name="F:NClone.MetadataProviders.ReplicationBehavior.Ignore">
+            <summary>
+            Ignore during cloning: default value used for fields, default value returned for types.
+            </summary>
+        </member>
+        <member name="F:NClone.MetadataProviders.ReplicationBehavior.Copy">
+            <summary>
+            Value should be copied, no replication occur.
+            </summary>
+        </member>
+        <member name="F:NClone.MetadataProviders.ReplicationBehavior.DeepCopy">
+            <summary>
+            Value should be deep copied.
+            </summary>
+        </member>
+        <member name="T:NClone.ObjectReplication.CircularReferenceFoundException">
+            <summary>
+            Indicates that object graph, which should be replicated, contains a cycle.
+            </summary>
+        </member>
+        <member name="M:NClone.ObjectReplication.CircularReferenceFoundException.#ctor">
+            <summary>
+            Default constructor for <see cref="T:NClone.ObjectReplication.CircularReferenceFoundException"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ObjectReplication.IReplicationContext">
+            <summary>
+            Represents the context of replication of a single object graph. It tracks cloned objects to preserve
+            object graph topology in cloned graph (e.g. when one object is referenced twice in source object graph,
+            it should also be reference twice in resulting graph), and detects reference cycles.
+            </summary>
+        </member>
+        <member name="M:NClone.ObjectReplication.IReplicationContext.Replicate(System.Object)">
+            <summary>
+            Replicate <paramref name="source"/> or return its cached replica.
+            </summary>
+            <exception cref="T:NClone.ObjectReplication.CircularReferenceFoundException">
+            Is thrown when the reference cycle is found in the source object graph.
+            </exception>
+        </member>
+        <member name="T:NClone.ObjectReplication.ObjectReplicator">
+            <summary>
+            Object that is able to replicate acyclic object graphs.
+            </summary>
+            <remarks>
+            <para>Deep copy of the given object graph is other object graph, which is semantically equal (isomorphic) to the given one,
+            but is not reference equal to it. And hence, if some object in the original object graph is modified, it does not affect cloned 
+            object graph. Note that object graph topology is preserved during cloning. That is, if in original graph two objects (say objectA
+            and objectB) reference single object (objectC), then in the cloned graph clone(objectA) and clone(objectB) will reference single
+            clone(objectC).</para>
+             
+            <para>The way how <see cref="T:NClone.ObjectReplication.ObjectReplicator"/> replicates objects is configurable. It takes into account
+            <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/>s for types and type members provided by <see cref="T:NClone.MetadataProviders.IMetadataProvider"/>. Depending on
+            <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> objects are either deep copied, by-value copied or ignored (default value is used in resulting
+            object graph). Note that for each object in a source graph (except top-level object) two <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/>s are
+            provided: defined for object type and for member, where object is stored. Actual <see cref="T:NClone.MetadataProviders.ReplicationBehavior"/> is computed
+            as a minimum of them.</para>
+            
+            <para><see cref="T:NClone.ObjectReplication.ObjectReplicator"/> intensively uses caching. Usually second replication of object of the same type
+            is 5-100 times faster than the first one. Consequently, it is strongly recommended to reuse a single instance of
+            <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>. For the most of the cases you can avoid creating instance of <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>
+            manually, but to use static API to the single instance via <see cref="T:NClone.Clone"/> class.</para>
+            </remarks>
+            <seealso cref="T:NClone.Clone"/>
+            <seealso cref="T:NClone.MetadataProviders.IMetadataProvider"/>
+        </member>
+        <member name="M:NClone.ObjectReplication.ObjectReplicator.#ctor(NClone.MetadataProviders.IMetadataProvider)">
+            <summary>
+            Build instance of <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>.
+            </summary>
+        </member>
+        <member name="M:NClone.ObjectReplication.ObjectReplicator.Replicate``1(``0)">
+            <summary>
+            Replicate <paramref name="source"/>.
+            </summary>
+            <exception cref="T:NClone.ObjectReplication.CircularReferenceFoundException">
+            Is thrown when the reference cycle is found in source object graph.
+            </exception>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.IReplicationStrategyFactory">
+            <summary>
+            Factory that builds (and caches) <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> for the given <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:NClone.ReplicationStrategies.IReplicationStrategyFactory.StrategyForType(System.Type)">
+            <summary>
+            Builds (or get from cache) <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> for <paramref name="type"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ObjectReplication.ReplicationContext">
+            <summary>
+            Implementation of <see cref="T:NClone.ObjectReplication.IReplicationContext"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.CopyOnlyReplicationStrategy">
+            <summary>
+            Dummy implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/>, which <see cref="M:NClone.ReplicationStrategies.CopyOnlyReplicationStrategy.Replicate(System.Object,NClone.ObjectReplication.IReplicationContext)"/> method just returns a given argument.
+            </summary>
+        </member>
+        <member name="F:NClone.ReplicationStrategies.CopyOnlyReplicationStrategy.Instance">
+            <summary>
+            The single instance of <see cref="T:NClone.ReplicationStrategies.CopyOnlyReplicationStrategy"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.IgnoringReplicationStrategy">
+            <summary>
+            Dummy implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/>, which <see cref="M:NClone.ReplicationStrategies.IgnoringReplicationStrategy.Replicate(System.Object,NClone.ObjectReplication.IReplicationContext)"/> method always returns <c>null</c>.
+            </summary>
+        </member>
+        <member name="F:NClone.ReplicationStrategies.IgnoringReplicationStrategy.Instance">
+            <summary>
+            The single instance of <see cref="T:NClone.ReplicationStrategies.IgnoringReplicationStrategy"/>.
+            </summary>
+        </member>
+        <member name="T:NClone.Clone">
+            <summary>
+            Class that is able to clone (aka replicate or deep copy) acyclic object graphs. Static wrapper over <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>.
+            </summary>
+            <remarks>
+            <para>Deep copy of the given object graph is other object graph, which is semantically equal (isomorphic) to the given one,
+            but is not reference equal to it. And hence, if some object in the original object graph is modified, it does not affect cloned 
+            object graph. Note that object graph topology is preserved during cloning. That is, if in original graph two objects (say objectA
+            and objectB) reference single object (objectC), then in the cloned graph clone(objectA) and clone(objectB) will reference single
+            clone(objectC).</para>
+            
+            <para>The way how <see cref="T:NClone.Clone"/> clones objects can be configured. First, it respects annotations done via
+            <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/> (see more in <see cref="T:NClone.MetadataProviders.AttributeBasedMetadataProvider"/>
+            and <see cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>). And second, it follows three basic conventions (see more in
+            <see cref="T:NClone.MetadataProviders.ConventionalMetadataProvider"/>):
+            <list type="bullet">
+            <item>do not deep copy structures — copies them by-value instead;</item>
+            <item>do not copy delegates — uses <c>null</c>s in resulting object graphs;</item>
+            <item>throws when lazy-evaluated (like non-collection <see cref="T:System.Collections.Generic.IEnumerable`1"/> or <see cref="T:System.Linq.IQueryable`1"/>) objects are found.</item>
+            </list></para>
+            
+            <para>The main method of <see cref="T:NClone.Clone"/> class is <see cref="M:NClone.Clone.ObjectGraph``1(``0)"/>, that executes object cloning. In case you do
+            not want <see cref="T:NClone.Clone"/> to take described conventions into account, you can use <see cref="M:NClone.Clone.ObjectIgnoringConventions``1(``0)"/>
+            method instead.</para>
+            
+            <para>Note that <see cref="T:NClone.Clone"/> is only a static wrapper over an instance of <see cref="T:NClone.ObjectReplication.ObjectReplicator"/> class,
+            which uses specific <see cref="T:NClone.MetadataProviders.IMetadataProvider"/> to get meta-information about replicating types. In case you need
+            more extensibility, consider using <see cref="T:NClone.ObjectReplication.ObjectReplicator"/> directly.</para>
+            </remarks>
+            <seealso cref="T:NClone.ObjectReplication.ObjectReplicator"/>
+            <seealso cref="T:NClone.MetadataProviders.ConventionalMetadataProvider"/>
+            <seealso cref="T:NClone.MetadataProviders.AttributeBasedMetadataProvider"/>
+            <seealso cref="T:NClone.MetadataProviders.CustomReplicationBehaviorAttribute"/>
+        </member>
+        <member name="M:NClone.Clone.ObjectGraph``1(``0)">
+            <summary>
+            Replicates given <paramref name="source"/> acyclic object graph and return its deep copy.
+            </summary>
+            <remarks>
+            Uses both: conventions and attributes to adjust cloning process. Equivalent to <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>
+            with <see cref="T:NClone.MetadataProviders.ConventionalMetadataProvider"/>.
+            </remarks>
+            <exception cref="T:NClone.ObjectReplication.CircularReferenceFoundException">
+            Is thrown when the reference cycle is found in source object graph.
+            </exception>
+        </member>
+        <member name="M:NClone.Clone.ObjectIgnoringConventions``1(``0)">
+            <summary>
+            Replicates given <paramref name="source"/> acyclic object graph and return its deep copy.
+            </summary>
+            <remarks>
+            Uses only attributes to adjust cloning process. Equivalent to <see cref="T:NClone.ObjectReplication.ObjectReplicator"/>
+            with <see cref="T:NClone.MetadataProviders.AttributeBasedMetadataProvider"/>.
+            </remarks>
+            <exception cref="T:NClone.ObjectReplication.CircularReferenceFoundException">
+            Is thrown when the reference cycle is found in source object graph.
+            </exception>
+        </member>
+        <member name="T:NClone.MemberAccess.FieldAccessorBuilder">
+            <summary>
+            Factory for <see cref="T:NClone.MemberAccess.IMemberAccessor"/>s to fields.
+            </summary>
+        </member>
+        <member name="M:NClone.MemberAccess.FieldAccessorBuilder.BuildFor(System.Type,System.Reflection.FieldInfo,System.Boolean)">
+            <summary>
+            Build <see cref="T:NClone.MemberAccess.IMemberAccessor"/> to access <paramref name="field"/> in container of type <paramref name="containerType"/>.
+            </summary>
+            <param name="containerType">
+            Type of entity, in which <see cref="T:NClone.MemberAccess.IMemberAccessor"/> will get and/or set field value.
+            </param>
+            <param name="field">
+            Field of <paramref name="containerType"/> or its base classes, for which <see cref="T:NClone.MemberAccess.IMemberAccessor"/> is built.
+            </param>
+            <param name="skipAccessibilityChecks">
+            Flag that indicates, whether returned <see cref="T:NClone.MemberAccess.IMemberAccessor"/> should ignore visibility and <c>readonly</c> checks.
+            </param>
+            <remarks>
+            <para><paramref name="field"/> should be defined in <paramref name="containerType"/> or in one of its base types.</para>
+            
+            <para>Returned <see cref="T:NClone.MemberAccess.IMemberAccessor"/> will be able to access containers of type <paramref name="containerType"/>
+            or inherited, despite the fact where <paramref name="field"/> is defined.</para>
+            </remarks>
+        </member>
+        <member name="T:NClone.MemberAccess.IMemberAccessor">
+            <summary>
+            Represents access to a specific member of a specific type.
+            </summary>
+        </member>
+        <member name="M:NClone.MemberAccess.IMemberAccessor.SetMember(System.Object,System.Object)">
+            <summary>
+            Sets value of accessed member in <paramref name="container"/> to <paramref name="memberValue"/>
+            and returns modified <paramref name="container"/>.
+            </summary>
+            <remarks>
+            <para>This method returns value, because <paramref name="container"/> can be by-value type.
+            Such types cannot be edited in place.</para>
+            
+            <para>If <paramref name="container"/> is by-reference type, then returned value will be
+            equivalent to the <paramref name="container"/>.</para>
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">When <see cref="P:NClone.MemberAccess.IMemberAccessor.CanSet"/> is <c>false</c>.</exception>
+        </member>
+        <member name="M:NClone.MemberAccess.IMemberAccessor.GetMember(System.Object)">
+            <summary>
+            Gets value of accessed member in <paramref name="container"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When <see cref="P:NClone.MemberAccess.IMemberAccessor.CanGet"/> is <c>false</c>.</exception>
+        </member>
+        <member name="P:NClone.MemberAccess.IMemberAccessor.CanGet">
+            <summary>
+            Indicates whether current <see cref="T:NClone.MemberAccess.IMemberAccessor"/> can <see cref="M:NClone.MemberAccess.IMemberAccessor.GetMember(System.Object)"/>.
+            </summary>
+        </member>
+        <member name="P:NClone.MemberAccess.IMemberAccessor.CanSet">
+            <summary>
+            Indicates whether current <see cref="T:NClone.MemberAccess.IMemberAccessor"/> can <see cref="M:NClone.MemberAccess.IMemberAccessor.SetMember(System.Object,System.Object)"/>.
+            </summary>
+        </member>
+        <member name="P:NClone.MemberAccess.IMemberAccessor.MemberType">
+            <summary>
+            Declared <see cref="T:System.Type"/> of the accessed member.
+            </summary>
+        </member>
+        <member name="T:NClone.MemberAccess.MemberAccessor">
+            <summary>
+            Implementation of <see cref="T:NClone.MemberAccess.IMemberAccessor"/>
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.CommonReplicationStrategy">
+            <summary>
+            Implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategy"/> for general reference or value types.
+            </summary>
+        </member>
+        <member name="T:NClone.ReplicationStrategies.ReplicationStrategyFactory">
+            <summary>
+            Implementation of <see cref="T:NClone.ReplicationStrategies.IReplicationStrategyFactory"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

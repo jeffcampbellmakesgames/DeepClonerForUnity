@@ -24,9 +24,11 @@ THE SOFTWARE.
 */
 
 using System;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
+	[Preserve]
 	internal static class ShallowClonerGenerator
 	{
 		public static T CloneObject<T>(T obj)

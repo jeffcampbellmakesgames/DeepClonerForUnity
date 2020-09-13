@@ -25,40 +25,40 @@ THE SOFTWARE.
 
 using System;
 using System.Linq.Expressions;
+using UnityEngine.Scripting;
 
-namespace Force.DeepCloner.Helpers
+namespace JCMG.DeepCopyForUnity
 {
 	/// <summary>
 	///     Internal class but due implementation restriction should be public
 	/// </summary>
+	[Preserve]
 	public abstract class ShallowObjectCloner
 	{
 		private class ShallowSafeObjectCloner : ShallowObjectCloner
 		{
-			private static readonly Func<object, object> _cloneFunc;
+			private Func<object, object> CLONE_FUNC;
 
-			static ShallowSafeObjectCloner()
+			public ShallowSafeObjectCloner()
 			{
 				var methodInfo = typeof(object).GetPrivateMethod("MemberwiseClone");
 				var p = Expression.Parameter(typeof(object));
 				var mce = Expression.Call(p, methodInfo);
-				_cloneFunc = Expression.Lambda<Func<object, object>>(mce, p).Compile();
+
+				CLONE_FUNC = Expression.Lambda<Func<object, object>>(mce, p).Compile();
 			}
 
 			protected override object DoCloneObject(object obj)
 			{
-				return _cloneFunc(obj);
+				return CLONE_FUNC(obj);
 			}
 		}
 
-		private static readonly ShallowObjectCloner _unsafeInstance;
-
-		private static ShallowObjectCloner _instance;
+		private static readonly ShallowObjectCloner INSTANCE;
 
 		static ShallowObjectCloner()
 		{
-			_instance = new ShallowSafeObjectCloner();
-			_unsafeInstance = _instance;
+			INSTANCE = new ShallowSafeObjectCloner();
 		}
 
 		/// <summary>
@@ -71,28 +71,7 @@ namespace Force.DeepCloner.Helpers
 		/// </summary>
 		public static object CloneObject(object obj)
 		{
-			return _instance.DoCloneObject(obj);
-		}
-
-		internal static bool IsSafeVariant()
-		{
-			return _instance is ShallowSafeObjectCloner;
-		}
-
-		/// <summary>
-		///     Purpose of this method is testing variants
-		/// </summary>
-		internal static void SwitchTo(bool isSafe)
-		{
-			DeepClonerCache.ClearCache();
-			if (isSafe)
-			{
-				_instance = new ShallowSafeObjectCloner();
-			}
-			else
-			{
-				_instance = _unsafeInstance;
-			}
+			return INSTANCE.DoCloneObject(obj);
 		}
 	}
 }
