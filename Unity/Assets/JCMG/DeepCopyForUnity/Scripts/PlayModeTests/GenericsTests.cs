@@ -24,19 +24,13 @@ THE SOFTWARE.
 */
 
 using System;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class GenericsSpec : BaseTest
+	[TestFixture]
+	public class GenericsTests
 	{
-		public GenericsSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		[Test]
 		public void Tuple_Should_Be_Cloned()
 		{
@@ -48,7 +42,14 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(c.Item1, Is.EqualTo(1));
 			Assert.That(c.Item2, Is.EqualTo(2));
 
-			var cc = new Tuple<int, int, int, int, int, int, int>(1, 2, 3, 4, 5, 6, 7).DeepClone();
+			var cc = new Tuple<int, int, int, int, int, int, int>(
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7).DeepClone();
 			Assert.That(cc.Item7, Is.EqualTo(7));
 
 			var tuple = new Tuple<int, Generic<object>>(1, new Generic<object>());
@@ -87,7 +88,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Tuple_Should_Be_Cloned_With_Inheritance_And_Same_Object()
 		{
-			var c2 = new C2 { X = 1, Y = 2 };
+			var c2 = new C2
+			{
+				X = 1, Y = 2
+			};
 			var c = new Tuple<C1, C2>(c2, c2).DeepClone();
 			var cs = new Tuple<C1, C2>(c2, c2).ShallowClone();
 			c2.X = 42;

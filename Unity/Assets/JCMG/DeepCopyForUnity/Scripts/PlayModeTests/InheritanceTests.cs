@@ -25,28 +25,31 @@ THE SOFTWARE.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class InheritanceSpec : BaseTest
+	[TestFixture]
+	public class InheritanceTests
 	{
-		public InheritanceSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		public class C1 : IDisposable
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public int X;
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public int Y;
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public object O; // make it not safe
 
 			public void Dispose()
@@ -56,10 +59,16 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 
 		public class C2 : C1
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public new int X;
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public int Z;
 		}
 
@@ -67,10 +76,16 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		{
 			public int X { get; set; }
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public int Y { get; set; }
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public object O; // make it not safe
 
 			public void Dispose()
@@ -80,10 +95,16 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 
 		public class C2P : C1P
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public new int X { get; set; }
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public int Z { get; set; }
 		}
 
@@ -191,7 +212,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		{
 			var c1 = new C1();
 			var c2 = new C2();
-			var arr = new[] { c1, c2 };
+			var arr = new[]
+			{
+				c1,
+				c2
+			};
 
 			var cloned = arr.DeepClone();
 			Assert.That(cloned[0], Is.TypeOf<C1>());
@@ -255,7 +280,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void Array_Of_Struct_Casted_To_Interface_Should_Be_Cloned()
 		{
 			var s1 = new S1();
-			var arr = new IDisposable[] { s1, s1 };
+			var arr = new IDisposable[]
+			{
+				s1,
+				s1
+			};
 			var clonedArr = arr.DeepClone();
 			Assert.That(clonedArr[0], Is.EqualTo(clonedArr[1]));
 		}
@@ -270,22 +299,31 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 
 		public class Unsafe1 : Safe1
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public object X;
 		}
 
 		public class V1
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public Safe1 Safe;
 		}
 
 		public class V2
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public Safe1 Safe;
 
- 			public V2(string x)
+			public V2(string x)
 			{
 			}
 		}

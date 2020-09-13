@@ -23,10 +23,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests.Fixtures
 {
-	public interface IDoable
+	public struct DoableStruct1 : IDoable
 	{
-		int Do();
+		public int X;
+
+		public int Do()
+		{
+			return ++X;
+		}
 	}
 }

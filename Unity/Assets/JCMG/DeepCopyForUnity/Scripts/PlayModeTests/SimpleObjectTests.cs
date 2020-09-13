@@ -25,24 +25,37 @@ THE SOFTWARE.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Force.DeepCloner;
+using JCMG.DeepCopyForUnity.PlayModeTests.Fixtures;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(true)]
-	[TestFixture(false)]
-	public class SimpleObjectSpec : BaseTest
+	[TestFixture]
+	public class SimpleObjectTests
 	{
-		public SimpleObjectSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		[Test]
 		public void SimpleObject_Should_Be_Cloned()
 		{
-			var obj = new TestObject1 { Int = 42, Byte = 42, Short = 42, Long = 42, DateTime = new DateTime(2001, 01, 01), Char = 'X', Decimal = 1.2m, Double = 1.3, Float = 1.4f, String = "test1", UInt = 42, ULong = 42, UShort = 42, Bool = true, IntPtr = new IntPtr(42), UIntPtr = new UIntPtr(42), Enum = AttributeTargets.Delegate };
+			var obj = new TestObject1
+			{
+				Int = 42,
+				Byte = 42,
+				Short = 42,
+				Long = 42,
+				DateTime = new DateTime(2001, 01, 01),
+				Char = 'X',
+				Decimal = 1.2m,
+				Double = 1.3,
+				Float = 1.4f,
+				String = "test1",
+				UInt = 42,
+				ULong = 42,
+				UShort = 42,
+				Bool = true,
+				IntPtr = new IntPtr(42),
+				UIntPtr = new UIntPtr(42),
+				Enum = AttributeTargets.Delegate
+			};
 
 			var cloned = obj.DeepClone();
 			Assert.That(cloned.Byte, Is.EqualTo(42));
@@ -82,7 +95,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test(Description = "We have an special logic for simple structs, so, this test checks that this logic works correctly")]
 		public void SimpleStruct_Should_Be_Cloned()
 		{
-			var s1 = new S1 { A = 1 };
+			var s1 = new S1
+			{
+				A = 1
+			};
 			var cloned = s1.DeepClone();
 			Assert.That(cloned.A, Is.EqualTo(1));
 		}
@@ -90,7 +106,13 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test(Description = "We have an special logic for simple structs, so, this test checks that this logic works correctly")]
 		public void Simple_Struct_With_Child_Should_Be_Cloned()
 		{
-			var s1 = new S2 { S = new S3 { B = true } };
+			var s1 = new S2
+			{
+				S = new S3
+				{
+					B = true
+				}
+			};
 			var cloned = s1.DeepClone();
 			Assert.That(cloned.S.B, Is.EqualTo(true));
 		}
@@ -105,7 +127,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Nullable_Shoild_Be_Cloned()
 		{
-			var c = new ClassWithNullable { B = 42 };
+			var c = new ClassWithNullable
+			{
+				B = 42
+			};
 			var cloned = c.DeepClone();
 			Assert.That(cloned.A, Is.Null);
 			Assert.That(cloned.B, Is.EqualTo(42));
@@ -180,12 +205,18 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(g.DeepClone(), Is.EqualTo(g));
 		}
 
-		private class UnsafeObject
+		public class UnsafeObject
 		{
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public unsafe void* Void;
 
-			[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed. Suppression is OK here.")]
+			[SuppressMessage(
+				"StyleCop.CSharp.MaintainabilityRules",
+				"SA1401:FieldsMustBePrivate",
+				Justification = "Reviewed. Suppression is OK here.")]
 			public unsafe int* Int;
 		}
 
@@ -213,7 +244,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void String_In_Class_Should_Not_Be_Cloned()
 		{
-			var c = new C3 { X = "aaa" };
+			var c = new C3
+			{
+				X = "aaa"
+			};
 			var cloned = c.DeepClone();
 			Assert.That(cloned.X, Is.EqualTo(c.X));
 			Assert.True(ReferenceEquals(cloned.X, c.X));
@@ -227,9 +261,9 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 
 			// it is struct - and it can't be null, but it's readonly and should be copied
 			// also it private to ensure it copied correctly
-#pragma warning disable 169
+			#pragma warning disable 169
 			private readonly StructWithObject z;
-#pragma warning restore 169
+			#pragma warning restore 169
 
 			public object GetY()
 			{
@@ -291,7 +325,9 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(v == v.ShallowClone(), Is.True);
 		}
 
-		public class EmptyClass {}
+		public class EmptyClass
+		{
+		}
 
 		[Test(Description = "Empty class does not have any mutable properties, but should still result in a new instance.")]
 		public void Empty_Should_Not_Be_Cloned()

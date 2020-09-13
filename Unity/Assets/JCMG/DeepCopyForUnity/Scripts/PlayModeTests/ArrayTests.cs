@@ -26,23 +26,22 @@ THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class ArraysSpec : BaseTest
+	[TestFixture]
+	public class ArrayTests
 	{
-		public ArraysSpec(object isSafeInit)
-			: base((bool)isSafeInit)
-		{
-		}
-
 		[Test]
 		public void IntArray_Should_Be_Cloned()
 		{
-			var arr = new[] { 1, 2, 3 };
+			var arr = new[]
+			{
+				1,
+				2,
+				3
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(3));
 			CollectionAssert.AreEqual(arr, cloned);
@@ -51,7 +50,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void StringArray_Should_Be_Cloned()
 		{
-			var arr = new[] { "1", "2", "3" };
+			var arr = new[]
+			{
+				"1",
+				"2",
+				"3"
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(3));
 			CollectionAssert.AreEqual(arr, cloned);
@@ -61,14 +65,25 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void StringArray_Should_Be_Cloned_Two_Arrays()
 		{
 			// checking that cached object correctly clones arrays of different length
-			var arr = new[] { "111111111111111111111", "2", "3" };
+			var arr = new[]
+			{
+				"111111111111111111111",
+				"2",
+				"3"
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(3));
 			CollectionAssert.AreEqual(arr, cloned);
 			// strings should not be copied
 			Assert.That(ReferenceEquals(arr[1], cloned[1]), Is.True);
 
-			arr = new[] { "1", "2", "3", "4" };
+			arr = new[]
+			{
+				"1",
+				"2",
+				"3",
+				"4"
+			};
 			cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(4));
 			CollectionAssert.AreEqual(arr, cloned);
@@ -77,7 +92,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(0));
 
-			if (1.Equals(1)) arr = null;
+			if (1.Equals(1))
+			{
+				arr = null;
+			}
+
 			Assert.That(arr.DeepClone(), Is.Null);
 		}
 
@@ -85,7 +104,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void StringArray_Casted_As_Object_Should_Be_Cloned()
 		{
 			// checking that cached object correctly clones arrays of different length
-			var arr = (object)new[] { "1", "2", "3" };
+			var arr = (object)new[]
+			{
+				"1",
+				"2",
+				"3"
+			};
 			var cloned = arr.DeepClone() as string[];
 			Assert.That(cloned.Length, Is.EqualTo(3));
 			CollectionAssert.AreEqual((string[])arr, cloned);
@@ -101,7 +125,8 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			var cloned = arr.DeepClone();
 			CollectionAssert.AreEqual(arr, cloned);
 
-			arr = Encoding.ASCII.GetBytes("test testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testte");
+			arr = Encoding.ASCII.GetBytes(
+				"test testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest testte");
 			cloned = arr.DeepClone();
 			CollectionAssert.AreEqual(arr, cloned);
 		}
@@ -119,7 +144,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void ClassArray_Should_Be_Cloned()
 		{
-			var arr = new[] { new C1(1), new C1(2) };
+			var arr = new[]
+			{
+				new C1(1),
+				new C1(2)
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(2));
 			Assert.That(cloned[0].X, Is.EqualTo(1));
@@ -146,7 +175,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void StructArray_Should_Be_Cloned()
 		{
-			var arr = new[] { new S1(1), new S1(2) };
+			var arr = new[]
+			{
+				new S1(1),
+				new S1(2)
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(2));
 			Assert.That(cloned[0].X, Is.EqualTo(1));
@@ -156,7 +189,18 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void StructArray_With_Class_Should_Be_Cloned()
 		{
-			var arr = new[] { new S2 { C = new C1(1) }, new S2 { C = new C1(2) } };
+			var arr = new[]
+			{
+				new S2
+				{
+					C = new C1(1)
+				},
+				new S2
+				{
+					C = new C1(2)
+				}
+			};
+
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(2));
 			Assert.That(cloned[0].C.X, Is.EqualTo(1));
@@ -168,7 +212,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void NullArray_hould_Be_Cloned()
 		{
-			var arr = new C1[] { null, null };
+			var arr = new C1[]
+			{
+				null,
+				null
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Length, Is.EqualTo(2));
 			Assert.That(cloned[0], Is.Null);
@@ -179,9 +227,9 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void NullAsArray_hould_Be_Cloned()
 		{
 			var arr = (int[])null;
-// ReSharper disable ExpressionIsAlwaysNull
+			// ReSharper disable ExpressionIsAlwaysNull
 			var cloned = arr.DeepClone();
-// ReSharper restore ExpressionIsAlwaysNull
+			// ReSharper restore ExpressionIsAlwaysNull
 			Assert.That(cloned, Is.Null);
 		}
 
@@ -189,7 +237,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void IntList_Should_Be_Cloned()
 		{
 			// TODO: better performance for this type
-			var arr = new List<int> { 1, 2, 3 };
+			var arr = new List<int>
+			{
+				1, 2, 3
+			};
 			var cloned = arr.DeepClone();
 			Assert.That(cloned.Count, Is.EqualTo(3));
 			Assert.That(cloned[0], Is.EqualTo(1));
@@ -213,8 +264,20 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Array_Of_Same_Arrays_Should_Be_Cloned()
 		{
-			var c1 = new[] { 1, 2, 3 };
-			var arr = new[] { c1, c1, c1, c1, c1 };
+			var c1 = new[]
+			{
+				1,
+				2,
+				3
+			};
+			var arr = new[]
+			{
+				c1,
+				c1,
+				c1,
+				c1,
+				c1
+			};
 			var cloned = arr.DeepClone();
 
 			Assert.That(cloned.Length, Is.EqualTo(5));
@@ -299,7 +362,16 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void NonZero_Based_Array_Should_Be_Cloned()
 		{
-			var arr = Array.CreateInstance(typeof(int), new[] { 2 }, new[] { 1 });
+			var arr = Array.CreateInstance(
+				typeof(int),
+				new[]
+				{
+					2
+				},
+				new[]
+				{
+					1
+				});
 
 			arr.SetValue(1, 1);
 			arr.SetValue(2, 2);
@@ -311,7 +383,18 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void NonZero_Based_MultiDim_Array_Should_Be_Cloned()
 		{
-			var arr = Array.CreateInstance(typeof(int), new[] { 2, 2 }, new[] { 1, 1 });
+			var arr = Array.CreateInstance(
+				typeof(int),
+				new[]
+				{
+					2,
+					2
+				},
+				new[]
+				{
+					1,
+					1
+				});
 
 			arr.SetValue(1, 1, 1);
 			arr.SetValue(2, 2, 2);
@@ -323,7 +406,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Array_As_Generic_Array_Should_Be_Cloned()
 		{
-			var arr = new[] { 1, 2, 3 };
+			var arr = new[]
+			{
+				1,
+				2,
+				3
+			};
 			var genArr = (Array)arr;
 			var clone = (int[])genArr.DeepClone();
 			Assert.That(clone.Length, Is.EqualTo(3));
@@ -335,10 +423,15 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Array_As_IEnumerable_Should_Be_Cloned()
 		{
-			var arr = new[] { 1, 2, 3 };
+			var arr = new[]
+			{
+				1,
+				2,
+				3
+			};
 			var genArr = (IEnumerable<int>)arr;
 			var clone = (int[])genArr.DeepClone();
-// ReSharper disable PossibleMultipleEnumeration
+			// ReSharper disable PossibleMultipleEnumeration
 			Assert.That(clone.Length, Is.EqualTo(3));
 			Assert.That(clone[0], Is.EqualTo(1));
 			Assert.That(clone[1], Is.EqualTo(2));

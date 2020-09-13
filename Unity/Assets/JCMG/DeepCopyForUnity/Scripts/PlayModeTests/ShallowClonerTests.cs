@@ -24,23 +24,37 @@ THE SOFTWARE.
 */
 
 using System;
-using Force.DeepCloner;
+using JCMG.DeepCopyForUnity.PlayModeTests.Fixtures;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class ShallowClonerSpec : BaseTest
+	[TestFixture]
+	public class ShallowClonerTests
 	{
-		public ShallowClonerSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		[Test]
 		public void SimpleObject_Should_Be_Cloned()
 		{
-			var obj = new TestObject1 { Int = 42, Byte = 42, Short = 42, Long = 42, DateTime = new DateTime(2001, 01, 01), Char = 'X', Decimal = 1.2m, Double = 1.3, Float = 1.4f, String = "test1", UInt = 42, ULong = 42, UShort = 42, Bool = true, IntPtr = new IntPtr(42), UIntPtr = new UIntPtr(42), Enum = AttributeTargets.Delegate };
+			var obj = new TestObject1
+			{
+				Int = 42,
+				Byte = 42,
+				Short = 42,
+				Long = 42,
+				DateTime = new DateTime(2001, 01, 01),
+				Char = 'X',
+				Decimal = 1.2m,
+				Double = 1.3,
+				Float = 1.4f,
+				String = "test1",
+				UInt = 42,
+				ULong = 42,
+				UShort = 42,
+				Bool = true,
+				IntPtr = new IntPtr(42),
+				UIntPtr = new UIntPtr(42),
+				Enum = AttributeTargets.Delegate
+			};
 
 			var cloned = obj.ShallowClone();
 			Assert.That(cloned.Byte, Is.EqualTo(42));
@@ -62,7 +76,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(cloned.Enum, Is.EqualTo(AttributeTargets.Delegate));
 		}
 
-		private class C1
+		public class C1
 		{
 			public object X { get; set; }
 		}
@@ -76,7 +90,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(clone.X, Is.EqualTo(c1.X));
 		}
 
-		private struct S1 : IDisposable
+		public struct S1 : IDisposable
 		{
 			public int X;
 
@@ -163,7 +177,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Array_Should_Be_Cloned()
 		{
-			var a = new[] { 3, 4 };
+			var a = new[]
+			{
+				3,
+				4
+			};
 			var clone = a.ShallowClone();
 			Assert.That(clone.Length, Is.EqualTo(2));
 			Assert.That(clone[0], Is.EqualTo(3));

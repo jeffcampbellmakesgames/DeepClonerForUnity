@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 using System;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests.Fixtures
 {
 	public class TestObject1
 	{

@@ -16,6 +16,7 @@ MonoBehaviour:
   - Assets/JCMG
   packageIgnorePaths:
   - Assets/JCMG/DeepCopyForUnity/Scripts/Editor/Tests
+  - Assets/JCMG/DeepCopyForUnity/Scripts/PlayModeTests
   packageDestinationPath: 
   legacyPackageDestinationPath: ../Builds
   packageName: com.jeffcampbellmakesgames.deepcloneforunity

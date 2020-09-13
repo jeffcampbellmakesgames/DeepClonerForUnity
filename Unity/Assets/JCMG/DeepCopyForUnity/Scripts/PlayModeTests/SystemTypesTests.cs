@@ -26,19 +26,13 @@ THE SOFTWARE.
 using System;
 using System.Globalization;
 using System.Text;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class SystemTypesSpec : BaseTest
+	[TestFixture]
+	public class SystemTypesTests
 	{
-		public SystemTypesSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		[Test]
 		public void StandardTypes_Should_Be_Cloned()
 		{
@@ -46,7 +40,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			b.Append("test1");
 			var cloned = b.DeepClone();
 			Assert.That(cloned.ToString(), Is.EqualTo("test1"));
-			var arr = new[] { 1, 2, 3 };
+			var arr = new[]
+			{
+				1,
+				2,
+				3
+			};
 			var enumerator = arr.GetEnumerator();
 			enumerator.MoveNext();
 			var enumCloned = enumerator.DeepClone();
@@ -57,7 +56,10 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Funcs_Should_Be_Cloned()
 		{
-			var closure = new[] { "123" };
+			var closure = new[]
+			{
+				"123"
+			};
 			Func<int, string> f = x => closure[0] + x.ToString(CultureInfo.InvariantCulture);
 			var df = f.DeepClone();
 			var cf = f.ShallowClone();
@@ -102,7 +104,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			eht.Event -= a1;
 			eht.Event -= a2;
 			Assert.That(eht.Call(1), Is.EqualTo(0)); // 0
-			Assert.That(summ[0], Is.EqualTo(2)); // nothing to increment
+			Assert.That(summ[0], Is.EqualTo(2));     // nothing to increment
 			Assert.That(clone.Call(1), Is.EqualTo(2));
 		}
 	}

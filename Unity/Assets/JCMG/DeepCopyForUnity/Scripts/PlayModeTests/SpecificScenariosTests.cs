@@ -28,19 +28,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class SpecificScenariosTest : BaseTest
+	[TestFixture]
+	public class SpecificScenariosTests
 	{
-		public SpecificScenariosTest(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		[Test]
 		public void Test_ExpressionTree_OrderBy1()
 		{
@@ -53,7 +47,14 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Test_ExpressionTree_OrderBy2()
 		{
-			var l = new List<int> { 2, 1, 3, 4, 5 }.Select(y => new Tuple<int, string>(y, y.ToString(CultureInfo.InvariantCulture)));
+			var l = new List<int>
+			{
+				2,
+				1,
+				3,
+				4,
+				5
+			}.Select(y => new Tuple<int, string>(y, y.ToString(CultureInfo.InvariantCulture)));
 			var q = l.AsQueryable().OrderBy(x => x.Item1);
 			var q2 = q.DeepClone();
 			Assert.That(q2.ToArray()[0].Item1, Is.EqualTo(1));
@@ -74,7 +75,8 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		{
 			public static int Counter;
 
-			private readonly LazyRef<object> _lazyValue = new LazyRef<object>(() => (object)(++Counter).ToString(CultureInfo.InvariantCulture));
+			private readonly LazyRef<object> _lazyValue =
+				new LazyRef<object>(() => (object)(++Counter).ToString(CultureInfo.InvariantCulture));
 
 			public string GetValue()
 			{
@@ -92,7 +94,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Closure_Clone()
 		{
-			int a = 0;
+			var a = 0;
 			Func<int> f = () => ++a;
 			var fCopy = f.DeepClone();
 			Assert.That(f(), Is.EqualTo(1));
@@ -100,7 +102,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 			Assert.That(a, Is.EqualTo(1));
 		}
 
-		private class TestComparer : Comparer<int>
+		public class TestComparer : Comparer<int>
 		{
 			// make object unsafe to work
 			private object _fieldX = new object();
@@ -113,23 +115,28 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 
 		public class KnownFolders
 		{
-			[Guid("8BE2D872-86AA-4d47-B776-32CCA40C7018"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+			[Guid("8BE2D872-86AA-4d47-B776-32CCA40C7018")]
+			[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 			internal interface IKnownFolderManager
 			{
-				void FolderIdFromCsidl(int csidl, [Out] out Guid knownFolderID);
+				void FolderIdFromCsidl(int csidl, [Out]
+				                       out Guid knownFolderID);
 
-				void FolderIdToCsidl([In] [MarshalAs(UnmanagedType.LPStruct)] Guid id, [Out] out int csidl);
+				void FolderIdToCsidl([In] [MarshalAs(UnmanagedType.LPStruct)]
+				                     Guid id, [Out]
+				                     out int csidl);
 
 				void GetFolderIds();
 			}
 
-			[ComImport, Guid("4df0c730-df9d-4ae3-9153-aa6b82e9795a")]
+			[ComImport]
+			[Guid("4df0c730-df9d-4ae3-9153-aa6b82e9795a")]
 			internal class KnownFolderManager
 			{
 				// make object unsafe to work
-#pragma warning disable 169
+				#pragma warning disable 169
 				private object _fieldX;
-#pragma warning restore 169
+				#pragma warning restore 169
 			}
 		}
 
@@ -151,6 +158,7 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 						_value = _initializer();
 						_initializer = null;
 					}
+
 					return _value;
 				}
 				set

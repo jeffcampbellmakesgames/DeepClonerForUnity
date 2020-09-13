@@ -23,20 +23,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	[TestFixture(true)]
-	public class LoopCheckSpec : BaseTest
+	[TestFixture]
+	public class LoopCheckTests
 	{
-		public LoopCheckSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		public class C1
 		{
 			public int F { get; set; }
@@ -77,7 +70,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		public void Array_Of_Same_Objects_Should_Be_Cloned()
 		{
 			var c1 = new C1();
-			var arr = new[] { c1, c1, c1 };
+			var arr = new[]
+			{
+				c1,
+				c1,
+				c1
+			};
 			c1.F = 1;
 			var cloned = arr.DeepClone();
 

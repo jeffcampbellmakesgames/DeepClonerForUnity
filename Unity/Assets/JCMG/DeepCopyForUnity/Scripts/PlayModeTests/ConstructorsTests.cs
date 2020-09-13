@@ -24,19 +24,13 @@ THE SOFTWARE.
 */
 
 using System;
-using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace JCMG.DeepCopyForUnity.Editor.Tests
+namespace JCMG.DeepCopyForUnity.PlayModeTests
 {
-	[TestFixture(false)]
-	public class ConstructorsSpec : BaseTest
+	[TestFixture]
+	public class ConstructorsTests
 	{
-		public ConstructorsSpec(bool isSafeInit)
-			: base(isSafeInit)
-		{
-		}
-
 		public class T1
 		{
 			private T1()
@@ -103,7 +97,11 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		{
 			// just for check, ensure no hidden behaviour in MemberwiseClone
 			Assert.DoesNotThrow(() => new ClonableClass().DeepClone());
-			Assert.DoesNotThrow(() => new { X = new ClonableClass() }.DeepClone());
+			Assert.DoesNotThrow(
+				() => new
+				{
+					X = new ClonableClass()
+				}.DeepClone());
 		}
 
 		[Test]
@@ -129,17 +127,20 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		[Test]
 		public void Anonymous_Object_Should_Be_Cloned()
 		{
-			var t2 = new { A = 1, B = "x" };
+			var t2 = new
+			{
+				A = 1, B = "x"
+			};
 			var cloned = t2.DeepClone();
 			Assert.That(cloned.A, Is.EqualTo(1));
 			Assert.That(cloned.B, Is.EqualTo("x"));
 		}
 
-		private class C3 : ContextBoundObject
+		public class C3 : ContextBoundObject
 		{
 		}
 
-		private class C4 : MarshalByRefObject
+		public class C4 : MarshalByRefObject
 		{
 		}
 
@@ -166,7 +167,12 @@ namespace JCMG.DeepCopyForUnity.Editor.Tests
 		{
 			Assert.DoesNotThrow(() => new ExClass("x").DeepClone());
 			var exClass = new ExClass("x");
-			Assert.DoesNotThrow(() => new[] { exClass, exClass }.DeepClone());
+			Assert.DoesNotThrow(
+				() => new[]
+				{
+					exClass,
+					exClass
+				}.DeepClone());
 		}
 	}
 }
