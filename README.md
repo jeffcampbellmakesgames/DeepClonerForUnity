@@ -7,6 +7,18 @@
 ## About
 **DeepCloner For Unity** is a support library for easy shallow and deep copying of C# .Net objects in Unity. It is a fork of the original **DeepCloner** library that has additional support for ensuring `UnityEngine` type or derived type members on an object are assigned rather than shallow or deep-copied as many of these cannot be instantiated through plain C# construction.
 
+## Requirements
+* Unity 2019.4 LTS or greater
+* If using `il2cpp`, you must include the following snippet below in your `link.xml` file to prevent this assembly from being stripped, otherwise `DeepCloner` functionality will fail when attempted to be used at runtime (though it will compile).
+
+```xml
+<linker>
+	<assembly fullname="System.Core">
+		<type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+	</assembly>
+</linker>
+```
+
 ## Installing DeepClonerForUnity
 Using this library in your project can be done in three ways:
 
